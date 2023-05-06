@@ -1,0 +1,213 @@
+openapi: 3.1.0
+x-stoplight:
+  id: qml5igz12qx5q
+info:
+  title: CodeCabinet
+  version: "1.0"
+  description: ""
+servers:
+  - url: "http://localhost:3000/api"
+tags:
+  - name: snippet
+paths:
+  /snippets:
+    get:
+      summary: スニペット一覧取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Snippet"
+                  x-stoplight:
+                    id: 98g1s1gnyrowg
+              examples:
+                Example 1:
+                  value:
+                    - id: clhc0wft6000008l94wira7kx
+                      title: python example
+                      language: python
+                      code: "def main(): pass"
+                      description: main function
+                      tags:
+                        - tag1
+                        - tag2
+                      createdAt: "2019-08-24T14:15:22Z"
+                      updatedAt: "2019-08-24T14:15:22Z"
+                    - id: clhc0wsak000108l91sl5d9r2
+                      title: rust example
+                      language: rust
+                      code: 'fn main() { println!("Hello, world!"); }'
+                      description: hello world
+                      tags:
+                        - hello
+                        - world
+                      createdAt: "2019-08-24T14:15:22Z"
+                      updatedAt: "2019-08-24T14:15:22Z"
+          headers: {}
+      operationId: GetSnippets
+      tags:
+        - snippet
+      description: スニペット一覧取得
+  /snippet:
+    post:
+      summary: スニペット作成
+      operationId: CreateSnippet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Snippet"
+      description: スニペット作成
+      tags:
+        - snippet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Snippet"
+        description: 作成データ
+      parameters: []
+      security:
+        - GitHub: []
+        - Google: []
+  "/snippet/{snippetId}":
+    parameters:
+      - schema:
+          type: string
+        name: snippetId
+        in: path
+        required: true
+    patch:
+      summary: スニペット更新
+      operationId: UpdateSnippet
+      responses:
+        "200":
+          description: 更新後スニペット
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Snippet"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Snippet"
+        description: 更新データ
+      tags:
+        - snippet
+      description: スニペット更新
+      security:
+        - GitHub: []
+        - Google: []
+    delete:
+      summary: スニペット削除
+      operationId: DeleteSnippet
+      responses:
+        "200":
+          description: OK
+      requestBody:
+        content: {}
+      tags:
+        - snippet
+      description: スニペット削除
+      security:
+        - GitHub: []
+        - Google: []
+components:
+  schemas:
+    Snippet:
+      title: Snippet
+      x-stoplight:
+        id: m0rh7wv4hu98t
+      type: object
+      x-tags:
+        - snippet
+      examples:
+        - id: clhc0wft6000008l94wira7kx
+          title: python example
+          language: python
+          code: "def main(): pass"
+          description: main function
+          tags:
+            - tag1
+            - tag2
+          createdAt: "2019-08-24T14:15:22Z"
+          updatedAt: "2019-08-24T14:15:22Z"
+        - id: clhc0wsak000108l91sl5d9r2
+          title: rust example
+          language: rust
+          code: 'fn main() { println!("Hello, world!"); }'
+          description: hello world
+          tags:
+            - hello
+            - world
+          createdAt: "2019-08-24T14:15:22Z"
+          updatedAt: "2019-08-24T14:15:22Z"
+      description: スニペット
+      properties:
+        id:
+          type: string
+          description: CUID
+          readOnly: true
+        title:
+          type: string
+          x-stoplight:
+            id: y1vr1g3lil7k2
+        language:
+          type: string
+          x-stoplight:
+            id: qc3yb35q7wet1
+        code:
+          type: string
+          x-stoplight:
+            id: pgsxgghtvldlr
+        description:
+          type: string
+          x-stoplight:
+            id: g68co571vyuif
+        tags:
+          type: array
+          x-stoplight:
+            id: hswr8fld25w5t
+          maxItems: 7
+          items:
+            x-stoplight:
+              id: dm6x4v6w0hult
+            type: string
+            maxLength: 20
+        createdAt:
+          type: string
+          x-stoplight:
+            id: 7gs15vk16qq7l
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          x-stoplight:
+            id: wr45ogtdk3pwt
+          format: date-time
+          readOnly: true
+      required:
+        - title
+        - language
+        - code
+  securitySchemes:
+    GitHub:
+      type: oauth2
+      description: ""
+      flows:
+        implicit:
+          scopes: {}
+          authorizationUrl: "http://localhost:3000/api/auth/signin/github"
+    Google:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: "http://localhost:3000/api/auth/signin/google"
+          scopes: {}
