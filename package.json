@@ -10,6 +10,7 @@
     "format": "yarn run lint --fix && prettier --write src/**/*.{ts,tsx,js,jsx}"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "@types/node": "20.1.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.4",
@@ -25,6 +26,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "prisma": "^4.13.0"
   }
 }
