@@ -13,9 +13,9 @@ generator client {
 }
 
 generator zod {
-  provider         = "zod-prisma-types"
-  output           = "../src/generated/schemas/zod"
-  useMultipleFiles = true
+  provider    = "zod-prisma"
+  output      = "../src/generated/schemas/zod"
+  modelSuffix = "Schema"
 }
 
 generator erd {
@@ -28,22 +28,90 @@ generator erd {
 model Snippet {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
-  /// @zod.string.min(1, { message: "min error" }).max(50, { message: "max error" })
   title       String
-  /// @zod.string.min(1, { message: "min error" }).max(50, { message: "max error" })
   language    String
-  /// @zod.string.min(1, { message: "min error" }).max(10000, { message: "too long code" })
   code        String
-  /// @zod.string.min(1, { message: "min error" }).max(1000, { message: "too long description" })
   description String?
-  /// @zod.string.min(1, { message: "min error" }).max(20, { message: "Too long value." }).array(.max(7, { message: "You can set a maximum of 7 tags." }))
   tags        String[]
+  isPublic    Boolean  @default(false) @map("is_public")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupSnippets GroupSnippet[]
 
   @@map("snippets")
+}
+
+model Permission {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  userGroups      UserGroup[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model RolePermission {
+  roleId       String     @map("role_id")
+  permissionId String     @map("permission_id")
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  allowPublic Boolean  @default(false) @map("allow_public")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  users         UserGroup[]
+  groupSnippets GroupSnippet[]
+
+  @@map("groups")
+}
+
+model UserGroup {
+  id      String @id @default(cuid())
+  userId  String @map("user_id")
+  groupId String @map("group_id")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group  Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role   Role?   @relation(fields: [roleId], references: [id])
+  roleId String?
+
+  @@unique([userId, groupId])
+  @@map("user_groups")
+}
+
+model GroupSnippet {
+  id          String   @id @default(cuid())
+  groupId     String   @map("group_id")
+  snippetId   String   @map("snippet_id")
+  allowPublic Boolean? @map("allow_public")
+
+  group   Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  snippet Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, snippetId])
+  @@map("group_snippets")
 }
 
 model Account {
@@ -84,9 +152,10 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
 
-  accounts Account[]
-  sessions Session[]
-  snippets Snippet[]
+  accounts  Account[]
+  sessions  Session[]
+  snippets  Snippet[]
+  UserGroup UserGroup[]
 
   @@map("users")
 }
