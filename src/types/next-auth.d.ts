@@ -8,6 +8,6 @@ declare module "next-auth" {
     user: User;
   }
   interface User extends DefaultUser {
-    id?: string;
+    id: string;
   }
 }
