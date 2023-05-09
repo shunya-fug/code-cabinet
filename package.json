@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src",
-    "format": "yarn run lint --fix && prettier --write src/**/*.{ts,tsx,js,jsx}"
+    "format": "yarn lint --fix && prettier --write \"src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
