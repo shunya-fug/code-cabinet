@@ -8,6 +8,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
   "vs-code-prettier-eslint.prettierLast": false,
   "[jsonc]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
@@ -17,5 +20,20 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**",
+    "**/generated/**",
+    "**/.next/**"
+  ],
+  "files.exclude": {
+    "**/.next/**": true
+  },
+  "typescript.tsserver.maxTsServerMemory": 16384
 }
